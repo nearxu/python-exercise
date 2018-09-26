@@ -49,8 +49,9 @@ def write_data(data):
 
 def main():
     data = get_page(2)
-    write_data(data)
-    print('写入成功！！！')
+    print(data)
+    # write_data(data)
+    # print('写入成功！！！')
 
 
 main()
