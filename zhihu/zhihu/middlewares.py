@@ -6,10 +6,9 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-# from douban.settings import IPPOOL
-import random
 
-class DoubanSpiderMiddleware(object):
+
+class ZhihuSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -57,11 +56,10 @@ class DoubanSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class DoubanDownloaderMiddleware(object):
+class ZhihuDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
-    
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -103,36 +101,3 @@ class DoubanDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
-
-# class DoubanHttpProxyMiddleware(object):
-#     def __init__(self, IPPOOL=[]):
-#         self.IPPOOL = IPPOOL
-
-
-#     def process_request(self, request, spider):
-#         # Called for each request that goes through the downloader
-#         # middleware.
-
-#         # Must either:
-#         # - return None: continue processing this request
-#         # - or return a Response object
-#         # - or return a Request object
-#         # - or raise IgnoreRequest: process_exception() methods of
-#         #   installed downloader middleware will be called
-#         # return None
-
-#         thisip = random.choice(self.IPPOOL)
-#         print(thisip['ipaddr'],'++++++++++++++++++++');
-#         request.meta['proxy'] = "http://"+thisip['ipaddr']
-
-#     @classmethod
-#     def from_settings(cls,settings):
-#         IPPOOL = settings['IPPOOL']
-#         # port = settings['MONGODB_PORT']
-#         # dbname = settings['MONGODB_DBNAME']
-#         # print(host, port, dbname)
-#         return cls(IPPOOL)
-
-# m = DoubanHttpProxyMiddleware(IPPOOL)
-# m.process_request()
-# m = DoubanHttpProxyMiddleware.from_settings(DoubanHttpProxyMiddleware, setting)

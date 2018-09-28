@@ -15,3 +15,6 @@ class DoubanItem(scrapy.Item):
     movie_name = scrapy.Field()
     score = scrapy.Field()
     info = scrapy.Field()
+    doctor = scrapy.Field()
+    actor = scrapy.Field()
+    img = scrapy.Field()

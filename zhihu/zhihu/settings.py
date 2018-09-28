@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for douban project
+# Scrapy settings for zhihu project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,25 +9,26 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'douban'
+BOT_NAME = 'zhihu'
 
-SPIDER_MODULES = ['douban.spiders']
-NEWSPIDER_MODULE = 'douban.spiders'
+SPIDER_MODULES = ['zhihu.spiders']
+NEWSPIDER_MODULE = 'zhihu.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
+USER_AGENT= 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36'
+authorization = 'oauth c3cef7c66a1843f8b3a9e6a1e3160e20'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 3
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -44,29 +45,17 @@ ROBOTSTXT_OBEY = True
 #   'Accept-Language': 'en',
 #}
 
-IPPOOL=[	
-    {"ipaddr":"125.77.80.105:8118"},
-    {"ipaddr":"116.1.11.19:80"},
-    {"ipaddr":"106.75.225.83:808"},
-    {"ipaddr":"114.113.126.82:80"},
-    {"ipaddr":"210.26.124.143:808"},
-    {"ipaddr":"106.75.226.36:808"},
-    {"ipaddr":"61.182.88.133:40087"}]
-
-
-
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'douban.middlewares.DoubanSpiderMiddleware': 543,
+#    'zhihu.middlewares.ZhihuSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   'douban.middlewares.DoubanDownloaderMiddleware': 543,
-#    'douban.middlewares.DoubanHttpProxyMiddleware': 400,
-}
+#DOWNLOADER_MIDDLEWARES = {
+#    'zhihu.middlewares.ZhihuDownloaderMiddleware': 543,
+#}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -77,11 +66,11 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'douban.pipelines.DoubanPipeline': 300,
+   'zhihu.pipelines.ZhihuPipeline': 300,
 }
-MONGODB_HOST = '127.0.0.1'
-MONGODB_PORT = 27017
-MONGODB_DBNAME = 'doubanTop250'
+MONGO_URL='localhost'
+MONGO_DATABASE = 'zhihu'
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
