@@ -8,21 +8,21 @@
 import scrapy
 
 
-# class DoubanItem(scrapy.Item):
-#     # define the fields for your item here like:
-#     # name = scrapy.Field()
-#     ranking = scrapy.Field()
-#     # 电影名称
-#     name = scrapy.Field()
-#     # 评分
-#     score = scrapy.Field()
-#     # 评论人数
-#     score_num = scrapy.Field()
-#     url = scrapy.Field()
-#     img = scrapy.Field()
-#     info = scrapy.Field()
+class DoubanItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    ranking = scrapy.Field()
+    # 电影名称
+    name = scrapy.Field()
+    # 评分
+    score = scrapy.Field()
+    # 评论人数
+    score_num = scrapy.Field()
+    url = scrapy.Field()
+    img = scrapy.Field()
+    info = scrapy.Field()
 
-class Quote(scrapy.Item):
-    text = scrapy.Field()
-    author = scrapy.Field()
-    tags = scrapy.Field()
+# class Quote(scrapy.Item):
+#     text = scrapy.Field()
+#     author = scrapy.Field()
+#     tags = scrapy.Field()

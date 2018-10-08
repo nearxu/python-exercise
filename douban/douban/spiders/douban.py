@@ -1,5 +1,5 @@
 import scrapy
-# from douban.items import DoubanItem
+from douban.items import DoubanItem
 
 class douabn_movies(scrapy.Spider):
     name='top250'
@@ -34,7 +34,7 @@ class douabn_movies(scrapy.Spider):
                 './/div[@class="pic"]/a/img/@src').extract()[0],
             item["info"] = movie.xpath(
                 './/div[@class="bd"]/p[@class="quote"]/span/text()').extract()[0]
-        # next_url = response.xpath('//span[@class="next"]/a/@href').extract()
-        # if next_url:
-        #     next_url = 'https://movie.douban.com/top250' + next_url[0]
-        #     yield scrapy.Request(next_url, headers=self.headers)
+        next_url = response.xpath('//span[@class="next"]/a/@href').extract()
+        if next_url:
+            next_url = 'https://movie.douban.com/top250' + next_url[0]
+            yield scrapy.Request(next_url, headers=self.headers)

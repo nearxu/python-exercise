@@ -36,9 +36,9 @@ class Top250Spider(CrawlSpider):
         item['score'] = response.xpath('//div[@class="rating_self clearfix"]/strong/text()').extract()[0]
         item['info'] = "".join(response.xpath('//div[@id="link-report"]/span/text()').extract())
         item['doctor'] = response.xpath('//span[@class="attrs"]/a/text()').extract()[0]
-        actors = response.xpath('//span[@class="actor"]/span[@class="attrs"]/span/a/text()').extract()
-        print(actors[0:3],'++++++++++++++actors++++++++')
-        item['actor'] = actors[0:3]
+        # actors = response.xpath('//span[@class="actor"]/span[@class="attrs"]/span/a/text()').extract()
+        # print(actors[0:3],'++++++++++++++actors++++++++')
+        # item['actor'] = actors[0:3]
         item['img'] = response.xpath('//div[@id="mainpic"]/a/img/@src').extract()[0]
         yield item
 

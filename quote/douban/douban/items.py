@@ -16,5 +16,5 @@ class DoubanItem(scrapy.Item):
     score = scrapy.Field()
     info = scrapy.Field()
     doctor = scrapy.Field()
-    actor = scrapy.Field()
+    # actor = scrapy.Field()
     img = scrapy.Field()
