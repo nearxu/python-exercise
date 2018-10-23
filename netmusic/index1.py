@@ -1,111 +1,79 @@
-# coding:utf-8
-# created by wuxh @ 2018-05-06
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-### https://zhuanlan.zhihu.com/p/36561112
-
-import random
-import base64
-from Crypto.Cipher import AES
-import sys
+import requests
+from bs4 import BeautifulSoup
 import json
-import urllib2
-import urllib
-#---
-#--- @music.163.com
-#--- get postData "params and encSeckeys"
-
-modulus = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7"
-nonce = '0CoJUm6Qyw8W8jud'
-pubKey = '010001'
-url = "https://music.163.com/weapi/cloudsearch/get/web?csrf_token="
+import re
+from urllib import request
 
 
-def getRandom():
-    string = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    res = ""
-    for i in range(16):
-        res += string[int(random.random() * 62)]
-    return res
-
-
-def aesEncrypt(text, secKey):
-    pad = 16 - len(text) % 16
-    text = text + pad * chr(pad)
-    encryptor = AES.new(secKey, 2, '0102030405060708')
-    ciphertext = encryptor.encrypt(text)
-    ciphertext = base64.b64encode(ciphertext).decode("utf-8")
-    return ciphertext
-
-
-def rsaEncrypt(text, pubKey, modulus):
-    text = text[::-1]
-    rs = int(text.encode('hex'), 16)**int(pubKey, 16) % int(modulus, 16)
-    return format(rs, 'x').zfill(256)
-
-
-def getParam(text):
-    secKey = getRandom()
-    params = aesEncrypt(aesEncrypt(text, secKey), nonce)
-    encSecKey = rsaEncrypt(secKey, pubKey, modulus)
-    return params, encSecKey
-
-
-HEADER = {}
-
-
-def setHeader():
-    HEADER = {
-        'Accept':
-        '*/*',
-        'Accept-Encoding':
-        'gzip,deflate,sdch',
-        'Accept-Language':
-        'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-        'Connection':
-        'keep-alive',
-        'Content-Type':
-        'application/x-www-form-urlencoded',
-        'Host':
-        'music.163.com',
-        'Referer':
-        'https://music.163.com/search/',
+# 1、获取网页
+def get_html(url):
+    headers = {
         'User-Agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36'
+        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36 OPR/49.0.2725.47',
+        'Referer':
+        'http://music.163.com/',
+        'Host':
+        'music.163.com'
     }
 
+    try:
+        response = requests.get(url, headers=headers)
+        html = response.text
+        return html
+    except:
+        print('request error')
 
-def search(s, type, offset):
-    text = {
-        "hlpretag": "<span class=\"s-fc7\">",
-        "hlposttag": "</span>",
-        "#/discover": "",
-        "s": s,
-        "type": type,
-        "offset": offset,
-        "total": "true",
-        "limit": "30",
-        "csrf_token": ""
-    }
-    secKey = getRandom()
-    text = json.dumps(text)
-    params = aesEncrypt(aesEncrypt(text, nonce), secKey)
-    encSecKey = rsaEncrypt(secKey, pubKey, modulus)
-    data = "params=" + urllib2.quote(params) + "&encSecKey=" + urllib2.quote(
-        encSecKey)
-    req = urllib2.Request(url, data=data.encode("utf-8"), headers=HEADER)
-    return urllib2.urlopen(req).read()
+
+def get_text(song_id):
+    url = 'http://music.163.com/api/song/lyric?' + 'id=' + str(
+        song_id) + '&lv=1&kv=1&tv=-1'
+    html = get_html(url)
+    json_obj = json.loads(html)
+    text = json_obj['lrc']['lyric']
+    regex = re.compile(r'\[.*\]')
+    finalLyric = re.sub(regex, '', text).strip()
+    return finalLyric
+
+
+def write_text(song_name, text):
+    print("正在写入歌曲：{}".format(song_name))
+    with open("{}.txt".format(song_name), 'a', encoding='utf-8') as fp:
+        fp.write(text)
+
+
+def getSingerInfo(html):
+    soup = BeautifulSoup(html, 'lxml')
+    links = soup.find('ul', class_='f-hide').find_all('a')
+    song_IDs = []
+    song_names = []
+    for link in links:
+        song_ID = link.get('href').split('=')[-1]
+        song_name = link.get_text()
+        song_IDs.append(song_ID)
+        song_names.append(song_name)
+    return zip(song_names, song_IDs)
+
+
+def downloadSong(songName, songId):
+    singer_url = 'http://music.163.com/song/media/outer/url?id={}.mp3'.format(
+        songId)
+    print('正在下载歌曲:{}'.format(songName))
+    request.urlretrieve(singer_url, '{}.mp3'.format(songName))
 
 
 if __name__ == "__main__":
-    setHeader()
-    # search(sys.argv[0],sys.argv[1],sys.argv[2])
-    print search("刘德华", "1", "0")
-    # text = {"hlpretag": "<span class=\"s-fc7\">", "hlposttag": "</span>", "#/discover": "", "s": "刘德华", "type": "1","offset": "0", "total": "true", "limit": "30", "csrf_token": ""}
-    # secKey = getRandom()
-    # text = json.dumps(text)
-    #
-    # params = aesEncrypt(aesEncrypt(text,nonce),secKey)
-    # encSecKey = rsaEncrypt(secKey,pubKey,modulus)
-    # print(params)
-    # print(encSecKey)
-    # print( "params="+urllib2.quote(params)+"&encSecKey="+urllib2.quote(encSecKey))
+    singerId = input("请输入歌手的ID：")
+    startUrl = "http://music.163.com/artist?id={}".format(singerId)
+    html = get_html(startUrl)
+    singerInfos = getSingerInfo(html)
+
+    for singerInfo in singerInfos:
+        print(singerInfo[1], singerInfo[0])
+        text = get_text(singerInfo[1])
+        # 下载歌曲文本
+        write_text(singerInfo[0], text)
+        # 下载歌曲mp3
+        # downloadSong(singerInfo[0], singerInfo[1])
