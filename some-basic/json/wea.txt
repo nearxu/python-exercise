@@ -1,0 +1,1 @@
+{"weatherinfo":{"city":"哈尔滨","cityid":"101050101","temp1":"14℃","temp2":"28℃","weather":"雷阵雨转晴","img1":"n4.gif","img2":"d0.gif","ptime":"18:00"}}
