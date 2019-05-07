@@ -18,7 +18,7 @@ def print_time(threadName, delay, counter):
         threadName.exit()
     time.sleep(delay)
     print ("%s: %s" % (threadName, time.ctime(time.time())))
-      counter -= 1
+    counter -= 1
 
 # 创建新线程
 thread1 = myThread(1, "Thread-1", 1)
